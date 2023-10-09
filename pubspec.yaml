@@ -1,0 +1,55 @@
+name: ecommerce
+description: A new Flutter project.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.6 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_image_slideshow: any
+
+  carousel_slider: ^4.2.1
+
+  cupertino_icons: ^1.0.2
+
+  badges: ^3.1.2
+  csc_picker: ^0.2.7
+  dio: ^5.3.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_launcher_icons: ^0.13.1
+
+
+
+flutter_launcher_icons:
+  android: 'launcher_icon'
+  ios: true
+  image_path: 'assets/images/logo2.png'
+
+flutter:
+
+  uses-material-design: true
+
+  fonts:
+    - family: android
+      fonts:
+        - asset: assets/fonts/android.ttf
+
+    - family: poppins
+      fonts:
+        - asset: assets/fonts/poppins.ttf
+
+    - family: flutter_font_icons
+      fonts:
+        - asset: assets/fonts/flutter_font_icons.ttf
+
+
+  assets:
+    - assets/images/
