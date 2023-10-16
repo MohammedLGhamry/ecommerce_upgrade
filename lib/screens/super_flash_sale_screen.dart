@@ -7,8 +7,8 @@ import 'package:ecommerce/widgets/grid_product_item_widget.dart';
 import 'package:flutter/material.dart';
 
 class SuperFlashSaleScreen extends StatelessWidget {
-  final OfferBannerModel offerBannerModel;
-  SuperFlashSaleScreen({super.key, required this.offerBannerModel});
+  final BannerItemModel bannerItemModel;
+  SuperFlashSaleScreen({super.key, required this.bannerItemModel});
 
   List<ProductModel> listOfSaleProducts = [
     ProductModel(
@@ -173,7 +173,7 @@ class SuperFlashSaleScreen extends StatelessWidget {
               Padding(
                   padding: const EdgeInsets.all(16),
                   child: FlashSaleImageWidget(
-                    offerBannerModel: offerBannerModel,
+                    bannerData: bannerItemModel,
                   )),
 
               /// gridview products

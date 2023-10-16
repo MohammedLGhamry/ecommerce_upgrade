@@ -14,13 +14,13 @@ class APIProductItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
-       /* Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => ProductScreen(productModel: listOfProducts,)));*/
-      },
+      /*onTap: (){
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => ProductScreen(productModel: productModel,)));
+      },*/
       child: Container(
         margin: EdgeInsets.only(right: 16),
-        width: 141,
+        width: 142,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           color: Colors.white,

@@ -1,6 +1,10 @@
 import 'package:ecommerce/models/category_model.dart';
 import 'package:ecommerce/models/offer_banner_model.dart';
 import 'package:ecommerce/models/product_model.dart';
+import 'package:ecommerce/repository/category_repo.dart';
+import 'package:ecommerce/repository/offer_banner_repo.dart';
+import 'package:ecommerce/repository/category_product_repo.dart';
+import 'package:ecommerce/screens/category_product_screen.dart';
 import 'package:ecommerce/screens/favorite_product%20_screen.dart';
 import 'package:ecommerce/screens/notification_screen.dart';
 import 'package:ecommerce/screens/super_flash_sale_screen.dart';
@@ -23,26 +27,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final dio = Dio();
 
-  Future<List<CategoryModel>> fetchCategories() async {
-    final response =
-        await dio.get('https://student.valuxapps.com/api/categories');
-    print(response);
-    if (response.statusCode == 200) {
-      final jsonData = response.data;
-      final categoriesData = jsonData['data']['data'] as List;
-      return categoriesData
-          .map((categoryJson) => CategoryModel.fromJson(categoryJson))
-          .toList();
-    } else {
-      throw Exception('Failed to load categories');
-    }
-  }
+  final Dio dio = Dio();
 
   Future<List<ProductModel>> fetchFlashSaleProducts() async {
     final response =
-    await dio.get('https://student.valuxapps.com/api/products?category_id=40');
+    await dio.get('https://student.valuxapps.com/api/products?category_id=44');
     print(response);
     if (response.statusCode == 200) {
       final jsonData = response.data;
@@ -54,27 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
       throw Exception('Failed to load categories');
     }
   }
-
-  List<OfferBannerModel> listOfOffersBanner = [
-    OfferBannerModel(
-        image: 'assets/images/promotion_image.png', salePercent: '50'),
-    OfferBannerModel(
-        image: 'assets/images/promotion_image02.png', salePercent: '75'),
-    OfferBannerModel(
-        image: 'assets/images/promotion_image.png', salePercent: '30'),
-    OfferBannerModel(
-        image: 'assets/images/promotion_image02.png', salePercent: '20'),
-  ];
-
-  List<CategoryModel> listOfCategory = [
-    CategoryModel(image: 'assets/images/shirt.png', name: 'Man Shirt'),
-    CategoryModel(image: 'assets/images/dress.png', name: 'Dress'),
-    CategoryModel(
-        image: 'assets/images/man_bag.png', name: 'Man Work Equipment'),
-    CategoryModel(image: 'assets/images/woman_bag.png', name: 'Woman Bag'),
-    CategoryModel(image: 'assets/images/man_bag.png', name: 'Man Bag'),
-    CategoryModel(image: 'assets/images/dress.png', name: 'Dress'),
-  ];
 
   List<ProductModel> listOfProducts = [
     ProductModel(
@@ -128,8 +97,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    indicatorStatus =
-        List.generate(listOfOffersBanner.length, (index) => index == 0);
+    /*indicatorStatus =
+        List.generate(listOfOffersBanner.length, (index) => index == 0);*/
   }
 
   @override
@@ -231,7 +200,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
 
                 /// slider
-                offersBannerSliderWidget(context),
+                FutureBuilder<List<BannerItemModel>>(
+                  future: OfferBannerRepo().fetchOfferBanner(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      final banners = snapshot.data!;
+                      return offersBannerSliderWidget(context, banners);
+                    }
+                  },
+                ),
 
                 /// rest of home
                 Expanded(
@@ -272,18 +253,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
 
                           /// category list
-                          FutureBuilder<List<CategoryModel>>(
-                            future: fetchCategories(),
+                          FutureBuilder<List<CategoryItemModel>>(
+                            future: CategoryRepo().fetchCategories(),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
                                 return Center(
                                   child: CircularProgressIndicator(),
                                 );
-                              } else {
-                                final categories = snapshot.data ?? [];
+                              }
+
+                              if (snapshot.hasData) {
+                                final categories = snapshot.data!;
                                 return categoryListWidget(categories);
                               }
+
+                              return const SizedBox();
                             },
                           ),
 
@@ -331,16 +316,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return Center(
                                   child: CircularProgressIndicator(),
                                 );
-                              }
-                              else if (snapshot.hasError) {
+                              } else if (snapshot.hasError) {
                                 return Center(
                                   child: Text("Error: ${snapshot.error}"),
                                 );
-                              }
-                              else {
-                                final products = snapshot.data ?? [];
+                              } else {
+                                final products = snapshot.data!;
                                 return Container(
-                                  height: 250,
+                                  height: 255,
                                   child: ListView.builder(
                                     itemCount: products.length,
                                     scrollDirection: Axis.horizontal,
@@ -355,7 +338,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               }
                             },
                           ),
-
 
                           const SizedBox(
                             height: 24,
@@ -454,40 +436,49 @@ class _HomeScreenState extends State<HomeScreen> {
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
         itemBuilder: (context, index) {
-          return Container(
-            height: 108,
-            width: 70,
-            margin: EdgeInsets.only(right: 12),
-            child: Column(
-              children: [
-                CircleAvatar(
-                  radius: 31,
-                  backgroundColor: AppColors.lightGrey,
-                  child: CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.white,
-                    child: Image.network(
-                      list[index].image,
-                      width: 24,
-                      height: 24,
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => CategoryProductScreen(
+                        name: list[index].name,
+                        id: list[index].id,
+                      )));
+            },
+            child: Container(
+              height: 108,
+              width: 70,
+              margin: EdgeInsets.only(right: 12),
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 31,
+                    backgroundColor: AppColors.lightGrey,
+                    child: CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.white,
+                      child: Image.network(
+                        list[index].image,
+                        width: 24,
+                        height: 24,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                Text(
-                  '${list[index].name}',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 10,
-                    height: 1.5,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.grey,
-                    letterSpacing: .5,
+                  const SizedBox(
+                    height: 8,
                   ),
-                ),
-              ],
+                  Text(
+                    '${list[index].name}',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 10,
+                      height: 1.5,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.grey,
+                      letterSpacing: .5,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -495,25 +486,25 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget offersBannerSliderWidget(BuildContext context) {
+  Widget offersBannerSliderWidget(BuildContext context, List list) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
           Container(
             child: CarouselSlider.builder(
-              itemCount: listOfOffersBanner.length,
+              itemCount: list.length,
               options: CarouselOptions(
                 viewportFraction: 1,
                 enlargeCenterPage: true,
                 scrollDirection: Axis.horizontal,
-                onPageChanged: (index, reason) {
+                /*onPageChanged: (index, reason) {
                   setState(() {
                     currentIndex = index;
                     indicatorStatus = List.generate(
                         listOfOffersBanner.length, (i) => i == index);
                   });
-                },
+                },*/
               ),
               itemBuilder:
                   (BuildContext context, int itemIndex, int pageViewIndex) =>
@@ -521,12 +512,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => SuperFlashSaleScreen(
-                                      offerBannerModel:
-                                          listOfOffersBanner[itemIndex],
+                                      bannerItemModel: list[itemIndex],
                                     )));
                           },
                           child: FlashSaleImageWidget(
-                            offerBannerModel: listOfOffersBanner[itemIndex],
+                            bannerData: list[itemIndex],
                           )),
             ),
           ),

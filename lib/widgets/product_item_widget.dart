@@ -12,10 +12,10 @@ class ProductItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
+      /*onTap: (){
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => ProductScreen(productModel: productModel,)));
-      },
+      },*/
       child: Container(
         margin: EdgeInsets.only(right: 16),
         width: 141,

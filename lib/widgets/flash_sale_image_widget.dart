@@ -3,21 +3,23 @@ import 'package:ecommerce/themes/colors.dart';
 import 'package:flutter/material.dart';
 
 class FlashSaleImageWidget extends StatelessWidget {
-  final OfferBannerModel offerBannerModel;
-  const FlashSaleImageWidget({super.key, required this.offerBannerModel});
+  final BannerItemModel bannerData;
+  const FlashSaleImageWidget({super.key, required this.bannerData});
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
+        height: 205,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           image: DecorationImage(
-            image: AssetImage(offerBannerModel.image),
+            image: NetworkImage(bannerData.image),
             fit: BoxFit.cover,
           ),
         ),
-        child: Column(
+
+       /* child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(
@@ -39,7 +41,7 @@ class FlashSaleImageWidget extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${offerBannerModel.salePercent}% Off',
+                    '50% Off',
                     style: TextStyle(
                       fontSize: 24,
                       height: 1.5,
@@ -120,7 +122,8 @@ class FlashSaleImageWidget extends StatelessWidget {
             ),
             const SizedBox(height: 30,),
           ],
-        ),
+        ),*/
+
       ),
     );
   }
