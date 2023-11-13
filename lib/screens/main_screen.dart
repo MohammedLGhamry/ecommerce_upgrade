@@ -1,3 +1,4 @@
+import 'package:ecommerce/screens/account_screen.dart';
 import 'package:ecommerce/screens/cart_screen.dart';
 import 'package:ecommerce/screens/explore_screen.dart';
 import 'package:ecommerce/screens/home_screen.dart';
@@ -24,7 +25,7 @@ class _MainScreenState extends State<MainScreen> {
     ExploreScreen(),
     CartScreen(),
     NotificationOfferScreen(),
-    LoginScreen(),
+    AccountScreen(),
   ];
   @override
   Widget build(BuildContext context) {

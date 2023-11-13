@@ -1,7 +1,9 @@
 import 'package:ecommerce/screens/home_screen.dart';
+import 'package:ecommerce/screens/login_screen.dart';
 import 'package:ecommerce/screens/main_screen.dart';
 import 'package:ecommerce/themes/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,18 +13,36 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
     super.initState();
     new Future.delayed(
         const Duration(seconds: 2),
-            () => Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => MainScreen(),
-          ),
-              (route) => false,
-        ));
+        () => getToken());
+  }
+
+  void getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access-token');
+
+    if (token != null && token.isNotEmpty) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainScreen(),
+        ),
+            (route) => false,
+      );
+    }
+    else {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ),
+            (route) => false,
+      );
+    }
   }
 
   @override

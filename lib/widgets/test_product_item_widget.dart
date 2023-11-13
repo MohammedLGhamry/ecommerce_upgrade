@@ -4,12 +4,10 @@ import 'package:ecommerce/screens/product_screen.dart';
 import 'package:ecommerce/themes/colors.dart';
 import 'package:flutter/material.dart';
 
-class APIProductItemWidget extends StatelessWidget {
+class ProductItemWidget extends StatelessWidget {
   final ProductModel productModel;
   //final ReviewModel reviewModel;
-  const APIProductItemWidget({super.key, required this.productModel});
-
-
+  const ProductItemWidget({super.key, required this.productModel});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +18,7 @@ class APIProductItemWidget extends StatelessWidget {
       },*/
       child: Container(
         margin: EdgeInsets.only(right: 16),
-        width: 142,
+        width: 141,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           color: Colors.white,
@@ -31,7 +29,7 @@ class APIProductItemWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.network(
+              Image.asset(
                 productModel.image,
                 width: 109,
                 height: 109,

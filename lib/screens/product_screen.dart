@@ -3,7 +3,7 @@ import 'package:ecommerce/models/review_model.dart';
 import 'package:ecommerce/repository/category_product_repo.dart';
 import 'package:ecommerce/repository/product_details_repo.dart';
 import 'package:ecommerce/themes/colors.dart';
-import 'package:ecommerce/widgets/product_item_widget.dart';
+import 'package:ecommerce/widgets/test_product_item_widget.dart';
 import 'package:ecommerce/widgets/review_widget.dart';
 import 'package:flutter/material.dart';
 
