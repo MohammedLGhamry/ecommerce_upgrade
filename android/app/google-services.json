@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "990288420398",
+    "project_id": "instant-ecommerce-825c5",
+    "storage_bucket": "instant-ecommerce-825c5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:990288420398:android:5d4284b769360ff6ac89bf",
+        "android_client_info": {
+          "package_name": "com.ecommerceupgrade.ecommerce_upgrade"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAa86SX44pyuGKN4k2ZGpVWeZQU3b1WREw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
